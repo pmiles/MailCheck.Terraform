@@ -1,0 +1,46 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "eu-west-2"
+  parameter-store:
+    AWS_PROD_ACCOUNT: "pipeline-Prod-Account"
+    AWS_STAGING_ACCOUNT: "pipeline-Staging-Account"
+    AWS_NONPROD_ACCOUNT: "pipeline-NonProd-Account"
+    AWS_S3_ACCOUNT: "pipeline-S3Account"
+    PRIVATE_REPO_SSH_KEY: "pipeline-SSHKey-parameter"
+    BUILD_VPC: "pipeline-build-vpc"
+    BUILD_VPC_CIDR_BLOCK: "build-vpc-cidr-block"
+    BUILD_ACCOUNT_ID: "pipeline-build-account-id"
+phases:
+  install:
+    commands:
+      # install terraform
+      - mkdir -p terraform
+      - curl -o terraform/terraform.zip `jq -r .tools.terraform microservice-configuration.json`
+      - unzip -d terraform terraform/terraform.zip
+      - terraform/terraform --version
+      - aws --version
+      # Get SSH key from parameter store to access private repos
+      - ./pipeline-scripts/getsshkey.sh
+      # Make common scripts executable
+
+  pre_build:
+    commands:
+            #- AWS_CONFIG_FILE="/awsprofiles.conf"
+            #      # Extract environment variables from the tfvars file for this environment
+            #      - TFVARS_FILE="$(./pipeline-scripts/gettfvarsfile.sh $GIT_BRANCH)"
+            #      - ENV_NAME="$(./pipeline-scripts/getenvname.sh $TFVARS_FILE)"
+            #      - AWS_ENV_ACCOUNT="$(./pipeline-scripts/getenvawsaccount.sh)"
+            #      - AWS_ROLE_TO_ASSUME="$(./pipeline-scripts/getroletoassume.sh $TFVARS_FILE)"
+      # Set up aws configuration file for terraform to use
+
+            #      - ./common-pipeline-scripts/writeawsconfigfile.sh
+  build:
+    commands:
+
+            #      - ./pipeline-scripts/terraformcommonplan.sh
+            #      - ./pipeline-scripts/writedynamictfvars.sh
+            #      - ./pipeline-scripts/terraformenvironmentplan.sh
+            #      - ./pipeline-scripts/terraformenvironmentapply.sh
+            #      - ./pipeline-scripts/terraformcommonapply.sh
